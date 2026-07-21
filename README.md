@@ -1,58 +1,152 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/brand/devscout-logo.png" width="420" alt="DevScout">
 </p>
 
-## About Laravel
+<p align="center">
+  Descubra, avalie e acompanhe talentos de desenvolvimento em um único workspace.
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# DevScout
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+O DevScout é uma plataforma de recrutamento técnico integrada ao GitHub. A aplicação ajuda equipes a encontrar desenvolvedores, analisar sinais públicos de experiência, comparar perfis e acompanhar candidatos durante todo o processo seletivo.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Funcionalidades
 
-## Learning Laravel
+- Descoberta de desenvolvedores por usuário, linguagem, localização, repositórios e estrelas.
+- Sincronização de perfis e repositórios públicos pela API do GitHub.
+- Score técnico com dimensões de impacto, qualidade, consistência, profundidade e colaboração.
+- Comparação de candidatos lado a lado.
+- Pipeline visual de recrutamento com múltiplas etapas.
+- Notas, tags, favoritos e histórico de scores.
+- Gestão de equipe com papéis e acesso inicial por senha temporária.
+- Isolamento de dados por organização.
+- Registro de auditoria das ações relevantes do workspace.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.5 e Laravel 13
+- Inertia.js 3, React 19 e TypeScript
+- Tailwind CSS 4
+- PostgreSQL 18
+- Pest 4
+- Laravel Sail
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Requisitos
 
-## Agentic Development
+- Docker com Docker Compose
+- Composer, necessário apenas para preparar o Laravel Sail em uma instalação nova
+- Token pessoal do GitHub recomendado para ampliar o limite de requisições da API
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalação
+
+Clone o repositório e acesse a pasta do projeto:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <url-do-repositorio> dev-scout
+cd dev-scout
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Instale as dependências PHP caso a pasta `vendor` ainda não exista:
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Prepare o ambiente:
 
-## Code of Conduct
+```bash
+cp .env.example .env
+vendor/bin/sail up -d
+vendor/bin/sail artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Para usar o PostgreSQL disponibilizado pelo Sail, configure estas variáveis no `.env`:
 
-## Security Vulnerabilities
+```dotenv
+APP_NAME=DevScout
+APP_URL=http://localhost
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+DB_CONNECTION=pgsql
+DB_HOST=pgsql
+DB_PORT=5432
+DB_DATABASE=devscout
+DB_USERNAME=sail
+DB_PASSWORD=password
 
-## License
+GITHUB_TOKEN=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Depois, crie o banco e compile o frontend:
+
+```bash
+vendor/bin/sail artisan migrate
+vendor/bin/sail npm install
+vendor/bin/sail npm run build
+```
+
+A aplicação estará disponível em [http://localhost](http://localhost).
+
+## Desenvolvimento
+
+Mantenha os containers ativos e execute o Vite em modo de desenvolvimento:
+
+```bash
+vendor/bin/sail up -d
+vendor/bin/sail npm run dev
+```
+
+O token definido em `GITHUB_TOKEN` é enviado apenas para a API do GitHub. Sem ele, a integração continua funcionando, mas fica sujeita ao limite reduzido para requisições anônimas.
+
+## Como utilizar a aplicação
+
+Consulte o [guia de uso do DevScout](docs/guia-de-uso.md) para acompanhar o fluxo completo, desde a criação do workspace até a gestão do pipeline, da equipe e da auditoria.
+
+Para entender as camadas, fluxos internos e responsabilidades de cada classe, consulte a [documentação de arquitetura](docs/arquitetura.md).
+
+## Qualidade e testes
+
+```bash
+# Testes automatizados
+vendor/bin/sail artisan test --compact
+
+# Análise de tipos do frontend
+vendor/bin/sail npm run typecheck
+
+# Lint do frontend
+vendor/bin/sail npm run lint
+
+# Formatação do PHP
+vendor/bin/sail bin pint --format agent
+
+# Build de produção
+vendor/bin/sail npm run build
+```
+
+## Estrutura principal
+
+```text
+app/
+├── Integrations/GitHub/     Cliente e normalização da API do GitHub
+├── Services/                Casos de uso e regras de negócio
+├── Repositories/            Acesso aos dados da aplicação
+└── Support/Tenancy/         Contexto da organização ativa
+
+resources/js/
+├── components/              Componentes compartilhados
+└── pages/                   Páginas React renderizadas pelo Inertia
+
+tests/
+├── Feature/                 Fluxos da aplicação
+└── Unit/                    Regras isoladas
+```
+
+## Identidade visual
+
+Os arquivos da marca estão disponíveis em [`public/brand`](public/brand):
+
+- `devscout-logo.png`: assinatura horizontal.
+- `devscout-icon.png`: ícone da aplicação e favicon.
+
+## Licença
+
+Este projeto é distribuído sob a licença MIT.
