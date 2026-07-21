@@ -1,4 +1,5 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import AppLayout from '../../components/AppLayout';
 
 type DiscoveryCandidate = {
@@ -24,6 +25,8 @@ type Props = {
 };
 
 export default function Index({ discovery, discoveryFilters }: Props) {
+    const [selectedLogins, setSelectedLogins] = useState<string[]>([]);
+
     return (
         <AppLayout>
             <Head title="Desenvolvedores" />
@@ -108,7 +111,21 @@ export default function Index({ discovery, discoveryFilters }: Props) {
                 <section className="discovery-results">
                     <div className="results-heading">
                         <strong>{discovery.data.length} candidatos nesta página</strong>
-                        <Link href="/pipeline">Ver Pipeline</Link>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            {selectedLogins.length > 0 && (
+                                <button 
+                                    className="button compact" 
+                                    onClick={() => {
+                                        router.post('/developers/sync', { logins: selectedLogins }, {
+                                            onSuccess: () => setSelectedLogins([])
+                                        });
+                                    }}
+                                >
+                                    Adicionar {selectedLogins.length} selecionados
+                                </button>
+                            )}
+                            <Link href="/pipeline">Ver Pipeline</Link>
+                        </div>
                     </div>
                     {discovery.data.length === 0 ? (
                         <div className="empty">
@@ -119,9 +136,28 @@ export default function Index({ discovery, discoveryFilters }: Props) {
                         <div className="candidate-grid">
                             {discovery.data.map((candidate) => (
                                 <article className="candidate-card" key={candidate.login}>
-                                    <img src={candidate.avatar_url} alt="" />
+                                    {!candidate.selected ? (
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedLogins.includes(candidate.login)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedLogins([...selectedLogins, candidate.login]);
+                                                } else {
+                                                    setSelectedLogins(selectedLogins.filter(l => l !== candidate.login));
+                                                }
+                                            }}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    ) : <div style={{ width: '13px' }}></div>}
+                                    
+                                    <a href={candidate.html_url} target="_blank" rel="noreferrer" style={{ display: 'contents' }}>
+                                        <img src={candidate.avatar_url} alt="" />
+                                    </a>
                                     <div>
-                                        <strong>@{candidate.login}</strong>
+                                        <a href={candidate.html_url} target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                            <strong>@{candidate.login}</strong>
+                                        </a>
                                         <span>
                                             ★ {candidate.total_stars.toLocaleString('pt-BR')} ·{' '}
                                             <a
