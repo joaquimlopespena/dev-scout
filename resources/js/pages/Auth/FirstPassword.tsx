@@ -1,11 +1,12 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import BrandLogo from '../../components/BrandLogo';
 
 export default function FirstPassword() {
     return (
         <main className="auth-shell first-access-shell">
             <Head title="Definir nova senha" />
             <section className="auth-card first-access-card">
-                <div className="brand">DevScout</div>
+                <BrandLogo href="/dashboard" />
                 <p className="eyebrow">Primeiro acesso</p>
                 <h1>Defina sua nova senha</h1>
                 <p className="auth-description">

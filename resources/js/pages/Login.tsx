@@ -1,11 +1,12 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import BrandLogo from '../components/BrandLogo';
 
 export default function Login() {
     return (
         <main className="auth-shell">
             <Head title="Entrar" />
             <section className="auth-card">
-                <div className="brand">DevScout</div>
+                <BrandLogo href="/login" />
                 <h1>Entre na sua conta</h1>
                 <Form action="/login" method="post" className="form">
                     {({ errors, processing }) => (

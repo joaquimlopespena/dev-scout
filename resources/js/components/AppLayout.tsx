@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, type PropsWithChildren } from 'react';
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
+import BrandLogo from './BrandLogo';
 
 type Shared = { auth: { user: { name: string } }; flash: { success?: string } };
 const links = [
@@ -30,7 +31,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
     return (
         <div className="app-shell">
             <aside>
-                <div className="brand brand-light">DevScout</div>
+                <BrandLogo compact href="/dashboard" />
                 <nav>
                     {links.map(([href, label]) => (
                         <Link
