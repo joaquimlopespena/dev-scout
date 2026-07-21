@@ -96,17 +96,6 @@ export default function Index({ discovery, discoveryFilters }: Props) {
                                     defaultValue={String(discoveryFilters.min_stars ?? '')}
                                 />
                             </label>
-                            <label>
-                                Ordenar por
-                                <select
-                                    name="sort"
-                                    defaultValue={String(discoveryFilters.sort ?? 'followers')}
-                                >
-                                    <option value="followers">Seguidores</option>
-                                    <option value="repositories">Repositórios</option>
-                                    <option value="joined">Data de entrada</option>
-                                </select>
-                            </label>
                             <button disabled={processing}>
                                 {processing ? 'Buscando…' : 'Buscar candidatos'}
                             </button>

@@ -1,5 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import type { PropsWithChildren } from 'react';
+import { useEffect, type PropsWithChildren } from 'react';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
 type Shared = { auth: { user: { name: string } }; flash: { success?: string } };
 const links = [
@@ -11,6 +13,20 @@ const links = [
 ];
 export default function AppLayout({ children }: PropsWithChildren) {
     const { url, props } = usePage<Shared>();
+
+    useEffect(() => {
+        if (props.flash.success) {
+            Toastify({
+                text: props.flash.success,
+                duration: 3000,
+                close: true,
+                gravity: 'top',
+                position: 'right',
+                style: { background: '#16724a', color: '#fff', borderRadius: '8px' }
+            }).showToast();
+        }
+    }, [props.flash.success]);
+
     return (
         <div className="app-shell">
             <aside>
@@ -32,7 +48,6 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 </div>
             </aside>
             <main className="content">
-                {props.flash.success && <div className="flash">{props.flash.success}</div>}
                 {children}
             </main>
         </div>
